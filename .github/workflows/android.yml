@@ -16,9 +16,9 @@ jobs:
         with:
           java-version: 1.8
       - name: set retailer app version
-        run: echo ::set-env name=RETAILER_APP_VERSION::$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d \''"\')
+        run: echo "RETAILER_APP_VERSION=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d \''"')" >> $GITHUB_ENV
       - name: echo
-        run: echo $env:$RETAILER_APP_VERSION
+        run: echo $RETAILER_APP_VERSION
 
         # This is the retailer app build
       - name: Build retailer app
