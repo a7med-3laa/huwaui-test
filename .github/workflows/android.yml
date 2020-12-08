@@ -1,0 +1,41 @@
+name: Android CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: set retailer app version
+        run: echo ::RETAILER_APP_VERSION::$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d \''"\')
+      - name: echo
+        run: echo $RETAILER_APP_VERSION
+
+        # This is the retailer app build
+      - name: Build retailer app
+        run: ./gradlew app:assembleDebug
+    #- name: Upload apk slack step
+    #  uses: adrey/slack-file-upload-action@master
+    #  with:
+    #    title: retailer release APL Version ${{ env.RETAILER_APP_VERSION }} from ${{ github.ref }}
+    #    token: ${{ secrets.SLACK_TOKEN }}
+    #    path: app/build/outputs/apk/bleed/release/app-bleed-release.apk
+    #    channel: app-development
+
+    # This is the wholesaler app build
+#    - name: Build with Gradle
+#      run: ./gradlew fatura-wholesaler:assembleBleedRelease
+
+
+#    - name: Upload a Build Artifact
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: uploading bleed apk
+#        path: app/build/outputs/apk/bleed/debug/app-bleed-debug.apk
